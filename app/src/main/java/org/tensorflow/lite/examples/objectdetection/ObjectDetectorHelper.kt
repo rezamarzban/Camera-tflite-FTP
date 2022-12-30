@@ -27,6 +27,8 @@ import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.detector.Detection
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 import org.tensorflow.lite.examples.objectdetection.FTPWrapper
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class ObjectDetectorHelper(
   var threshold: Float = 0.7f,
@@ -126,7 +128,9 @@ class ObjectDetectorHelper(
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
 
         val results = objectDetector?.detect(tensorImage)
-        action()
+        
+        action(image, results)
+        
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
         objectDetectorListener?.onResults(
             results,
@@ -135,21 +139,20 @@ class ObjectDetectorHelper(
             tensorImage.width)
     }
     
-    private fun action() {
-        val text = "Taking an action"
-        //val duration = Toast.LENGTH_SHORT
-        
-        //val toast = Toast.makeText(requireContext(), text, duration)
-        //toast.show()
-        
-        var status = ftpClient.ftpConnect("ftp.dlptest.com", "dlpuser", "rNrKYTX9g7z3RgJRmxWuGHbeu", 21)
-        if (status == true) {
-            //Toast.makeText(applicationContext, "FTP is connected successfully", Toast.LENGTH_SHORT).show()
-            ftpClient.ftpDisconnect()
-        } else {
-        //Toast.makeText(applicationContext, "FTP is not connected", Toast.LENGTH_SHORT).show()
+    private fun action(bitmap: Bitmap, results: MutableList<Detection>?) {
+        for (result in results!!) {
+            if (result.categories[0].label == "person") {
+                val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                val imageFileName: String = "/JPEG_" + timeStamp + ".jpg"
+                var status = ftpClient.ftpConnect("ftphost", "ftpusername", "ftppassword", 21)
+                if (status == true) {
+                    ftpClient.ftpUploadBitmap(bitmap, "/ftpdirectory" + imageFileName)
+                    ftpClient.ftpDisconnect()
+                } else {
+                    Log.e("Test", "FTP connection faild")
+                }
+            }
         }
-        
     }
 
     interface DetectorListener {

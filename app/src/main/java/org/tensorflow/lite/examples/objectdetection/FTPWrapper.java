@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
+import android.graphics.Bitmap;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -63,13 +65,17 @@ public class FTPWrapper {
     /**
      * Upload to FTP Server
      */
-    public boolean ftpUpload(String srcFilePath, String desFileName) {
+    public boolean ftpUploadBitmap(Bitmap bitmap, String desFileName) {
         Log.i("TEST2", "ftpUpload: ");
         boolean status = false;
         try {
-            FileInputStream srcFileStream = new FileInputStream(srcFilePath);
-            status = client.storeFile(desFileName, srcFileStream);
-            srcFileStream.close();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] fileBytes = byteArrayOutputStream.toByteArray();
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes);
+            status = client.storeFile(desFileName, inputStream);
+            inputStream.close();
+            byteArrayOutputStream.close();
             return status;
         } catch (Exception e) {
             e.printStackTrace();
