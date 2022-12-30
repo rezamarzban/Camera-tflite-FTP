@@ -1,9 +1,9 @@
-# TensorFlow Lite Object Detection Android Demo
+# TensorFlow Lite Object Detection FTP
 
 ### Overview
 
 This is a camera app that continuously detects the objects (bounding boxes and
-classes) in the frames seen by your device's back camera, with the option to use
+classes) in the frames seen by your device's back camera and send object image to FTP server, with the option to use
 a quantized
 [MobileNet SSD](https://tfhub.dev/tensorflow/lite-model/ssd_mobilenet_v1/1/metadata/2),
 [EfficientDet Lite 0](https://tfhub.dev/tensorflow/lite-model/efficientdet/lite0/detection/metadata/1),
@@ -21,15 +21,25 @@ This application should be run on a physical Android device.
 
 ![App example showing UI controls. Highlights a cat](https://storage.googleapis.com/download.tensorflow.org/tflite/examples/obj_detection_cat.gif)
 
-![App example showing UI controls. Highlights a cat, a book, and a couch.](screenshot1.png)
+## Releases
 
+Ver 2.0.0 changes:
 
-## Build the demo using Android Studio
+Added FTP action on object detection
+
+Changed default values and selections in option to best
+
+Downloaded tflite models to assets folder
+
+Ver 1.0.0 changes:
+
+Created repository
+
+## Build
 
 ### Prerequisites
 
-*   The **[Android Studio](https://developer.android.com/studio/index.html)**
-    IDE. This sample has been tested on Android Studio Bumblebee.
+*   This sample has been tested on Android IDE and Colab.
 
 *   A physical Android device with a minimum OS version of SDK 24 (Android 7.0 -
     Nougat) with developer mode enabled. The process of enabling developer mode
@@ -37,16 +47,22 @@ This application should be run on a physical Android device.
 
 ### Building
 
-*   Open Android Studio. From the Welcome screen, select Open an existing
-    Android Studio project.
+Run below commands in Colab:
+```
+!wget https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
+!mkdir -p sdk
+!unzip commandlinetools-linux-9123335_latest.zip -d sdk
+!yes | ./sdk/cmdline-tools/bin/sdkmanager --sdk_root=/content/sdk "tools"
+!git clone https://github.com/marzban2030/Camera-tflite-FTP
+!chmod -c 755 /content/Camera-tflite-FTP/gradlew
+!export ANDROID_HOME=/content/sdk && cd /content/Camera-tflite-FTP && ./gradlew assembleDebug
+```
 
-*   From the Open File or Project window that appears, navigate to and select
-    the tensorflow-lite/examples/object_detection/android directory. Click OK.
-
-*   If it asks you to do a Gradle Sync, click OK.
-
-*   With your Android device connected to your computer and developer mode
-    enabled, click on the green Run arrow in Android Studio.
+Then run:
+```
+from google.colab import files
+files.download('Camera-tflite-FTP/app/build/outputs/apk/debug/app-debug.apk')
+```
 
 ### Models used
 
