@@ -26,13 +26,14 @@ import org.tensorflow.lite.support.image.ops.Rot90Op
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.vision.detector.Detection
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
+import org.tensorflow.lite.examples.objectdetection.FTPWrapper
 
 class ObjectDetectorHelper(
-  var threshold: Float = 0.5f,
-  var numThreads: Int = 2,
-  var maxResults: Int = 3,
+  var threshold: Float = 0.7f,
+  var numThreads: Int = 4,
+  var maxResults: Int = 5,
   var currentDelegate: Int = 0,
-  var currentModel: Int = 0,
+  var currentModel: Int = 3,
   val context: Context,
   val objectDetectorListener: DetectorListener?
 ) {
@@ -40,6 +41,8 @@ class ObjectDetectorHelper(
     // For this example this needs to be a var so it can be reset on changes. If the ObjectDetector
     // will not change, a lazy val would be preferable.
     private var objectDetector: ObjectDetector? = null
+    
+    private val ftpClient: FTPWrapper = FTPWrapper()
 
     init {
         setupObjectDetector()
@@ -123,12 +126,30 @@ class ObjectDetectorHelper(
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
 
         val results = objectDetector?.detect(tensorImage)
+        action()
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
         objectDetectorListener?.onResults(
             results,
             inferenceTime,
             tensorImage.height,
             tensorImage.width)
+    }
+    
+    private fun action() {
+        val text = "Taking an action"
+        //val duration = Toast.LENGTH_SHORT
+        
+        //val toast = Toast.makeText(requireContext(), text, duration)
+        //toast.show()
+        
+        var status = ftpClient.ftpConnect("ftp.dlptest.com", "dlpuser", "rNrKYTX9g7z3RgJRmxWuGHbeu", 21)
+        if (status == true) {
+            //Toast.makeText(applicationContext, "FTP is connected successfully", Toast.LENGTH_SHORT).show()
+            ftpClient.ftpDisconnect()
+        } else {
+        //Toast.makeText(applicationContext, "FTP is not connected", Toast.LENGTH_SHORT).show()
+        }
+        
     }
 
     interface DetectorListener {
