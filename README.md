@@ -23,6 +23,10 @@ This application should be run on a physical Android device.
 
 ## Releases
 
+Ver 2.1.0 changes:
+
+Developed FTP action on object detection
+
 Ver 2.0.0 changes:
 
 Added FTP action on object detection
@@ -62,6 +66,17 @@ Then run:
 ```
 from google.colab import files
 files.download('Camera-tflite-FTP/app/build/outputs/apk/debug/app-debug.apk')
+```
+
+## Usage
+
+Change "person" in "ObjectDetectorHelper.kt" file according to tflite labels if you want to getting action on another object detection, Also change "ftphost", "ftpusername", "ftppassword", "/ftpdirectory" to be working.
+```
+... == "person") {
+        ...
+        ... ftpConnect("ftphost", "ftpusername", "ftppassword", 21)
+        ...
+        ... ftpUploadBitmap(bitmap, "/ftpdirectory" + ...
 ```
 
 ### Models used
