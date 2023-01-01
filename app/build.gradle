@@ -27,8 +27,8 @@ android {
         applicationId "org.tensorflow.lite.examples.objectdetection"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 3
-        versionName "2.1.0"
+        versionCode 4
+        versionName "2.2.0"
     }
 
     dataBinding {
