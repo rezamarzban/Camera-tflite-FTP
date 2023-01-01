@@ -140,8 +140,10 @@ class ObjectDetectorHelper(
     }
     
     private fun action(bitmap: Bitmap, results: MutableList<Detection>?) {
+        var switch = 1
         for (result in results!!) {
-            if (result.categories[0].label == "person") {
+            if (result.categories[0].label == "person" && switch == 1) {
+                switch = 0
                 val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
                 val imageFileName: String = "/JPEG_" + timeStamp + ".jpg"
                 var status = ftpClient.ftpConnect("ftphost", "ftpusername", "ftppassword", 21)
