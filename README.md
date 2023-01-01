@@ -23,6 +23,10 @@ This application should be run on a physical Android device.
 
 ## Releases
 
+Ver 2.2.0 changes:
+
+Enhanced FTP action algorithm by adding switch
+
 Ver 2.1.0 changes:
 
 Developed FTP action on object detection
